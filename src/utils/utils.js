@@ -11,9 +11,10 @@ const formatUrl = (urlLink) => {
 };
 
 const fileCreate = (url, path = '/') => {
-  axios
+  return axios
     .get(url)
-    .then(resp => fsPromises.writeFile(`${path}/${formatUrl(url)}.html`, resp.data));
+    .then(resp => fsPromises.writeFile(`${path}/${formatUrl(url)}.html`, resp.data))
+    .catch(e => console.error(e));
 };
 
 export { formatUrl, fileCreate };
