@@ -10,11 +10,10 @@ const formatUrl = (urlLink) => {
   return newName.replace(/[^A-Za-z0-9]/g, '-');
 };
 
-const fileCreate = (url, path = '/') => {
-  return axios
-    .get(url)
-    .then(resp => fsPromises.writeFile(`${path}/${formatUrl(url)}.html`, resp.data))
-    .catch(e => console.error(e));
-};
+const fileCreate = (url, path = '/') => axios
+  .get(url)
+  .then(resp => fsPromises.writeFile(`${path}/${formatUrl(url)}.html`, resp.data))
+  .catch(e => console.error(e));
+
 
 export { formatUrl, fileCreate };
