@@ -5,8 +5,8 @@ import path from 'path';
 import os from 'os';
 import beautify from 'js-beautify';
 import nock from 'nock';
-import { formatUrl, fileCreate } from '../src/utils/utils';
-
+import { formatUrl } from '../src/utils';
+import saveAsFile from '../src/index';
 
 const host = 'http://localhost';
 const testurl = 'http://localhost/test';
@@ -26,7 +26,7 @@ beforeAll(async () => {
 test('test html save to file', async () => {
   const expected = await fsPromises.readFile(`__tests__/__fixtures__/${formatUrl(testurl)}.html`, 'utf-8');
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
-  await fileCreate(testurl, patchToRecived);
+  await saveAsFile(testurl, patchToRecived);
   const recivedFile = await fsPromises.readFile(`${patchToRecived}/${formatUrl(testurl)}.html`, 'utf-8');
   expect(htmlBeutify(recivedFile)).toBe(htmlBeutify(expected));
 });

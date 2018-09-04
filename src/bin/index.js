@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import commander from 'commander';
 import { version } from '../../package.json';
-import { fileCreate } from '../utils/utils';
+import saveAsFile from '../index';
 
 commander
   .version(version, '-V, --version')
@@ -9,7 +9,7 @@ commander
   .usage('[options] <Directory> <URL>')
   .option('-o, --output [path]', 'output path')
   .action((url) => {
-    fileCreate(url, commander.output);
+    saveAsFile(url, commander.output);
   })
   .parse(process.argv);
 
