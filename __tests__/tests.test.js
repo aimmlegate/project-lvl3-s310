@@ -3,28 +3,38 @@ import httpAdapter from 'axios/lib/adapters/http';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { minify } from 'html-minifier';
 import nock from 'nock';
-import { formatUrl } from '../src/utils';
+import { getDirname } from '../src/utils';
 import saveAsFile from '../src/index';
+
 
 const testurl = 'http://localhost/test';
 const fsPromises = fs.promises;
 axios.defaults.adapter = httpAdapter;
 
-const htmlMinifyOptions = { collapseWhitespace: true };
 
 beforeAll(async () => {
-  const expected = await fsPromises.readFile('__tests__/__fixtures__/localhost-test.html', 'utf-8');
+  const html = await fsPromises.readFile('__tests__/__fixtures__/localhost-test.html', 'utf-8');
+  const css = await fsPromises.readFile('__tests__/__fixtures__/css.css', 'utf-8');
+  const img = await fsPromises.readFile('__tests__/__fixtures__/cats.jpg');
   nock('http://localhost/')
     .get('/test')
-    .reply(200, expected);
+    .reply(200, html)
+    .get('/cats.jpg')
+    .reply(200, img)
+    .get('/css.css')
+    .reply(200, css);
 });
 
 test('test html save to file', async () => {
-  const expected = await fsPromises.readFile(`__tests__/__fixtures__/${formatUrl(testurl)}.html`, 'utf-8');
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
+  const pathToRecivedAssets = path.resolve(patchToRecived, getDirname(testurl));
+
   await saveAsFile(testurl, patchToRecived);
-  const recivedFile = await fsPromises.readFile(`${patchToRecived}/${formatUrl(testurl)}.html`, 'utf-8');
-  expect(minify(recivedFile, htmlMinifyOptions)).toBe(minify(expected, htmlMinifyOptions));
+
+  const dirFiles = await fsPromises.readdir(patchToRecived, 'utf8');
+  const dirFilesAssets = await fsPromises.readdir(pathToRecivedAssets, 'utf8');
+
+  expect(dirFiles).toEqual(['localhost-test.html', 'localhost-test__files']);
+  expect(dirFilesAssets).toEqual(['cats.jpg', 'css.css']);
 });

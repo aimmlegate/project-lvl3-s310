@@ -52,7 +52,7 @@ const saveAsFile = (url, pathto = '/') =>
     .then(([dirname, srcs]) => {
       const requests = srcs.map(src =>
         saveFile(new URL(src, url).href, path.resolve(pathto, dirname)));
-      Promise.all(requests);
+      return Promise.all(requests);
     })
     .catch(e => console.error(e));
 
