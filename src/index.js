@@ -1,5 +1,5 @@
 import axios from 'axios';
-import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 import { URL } from 'url';
 import mime from 'mime';
@@ -12,8 +12,6 @@ import {
   transformAllSrcInHtml,
   getDirname,
 } from './utils';
-
-const { promises: fsPromises } = fs;
 
 const saveFile = (url, pathto) => {
   const fileName = getFilename(url);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
-import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 import os from 'os';
 import nock from 'nock';
@@ -9,7 +9,6 @@ import saveAsFile from '../src/index';
 
 
 const testurl = 'http://localhost/test';
-const fsPromises = fs.promises;
 axios.defaults.adapter = httpAdapter;
 
 
