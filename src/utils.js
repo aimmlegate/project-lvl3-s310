@@ -1,22 +1,21 @@
 import url, { URL } from 'url';
-import path from 'path';
 import cheerio from 'cheerio';
 import _ from 'lodash';
 
-const formatUrl = (urlLink) => {
+export const formatUrl = (urlLink) => {
   const link = url.parse(urlLink);
   const newName = `${link.host}${(link.path !== '/') ? link.path : ''}`;
   return newName.replace(/[^A-Za-z0-9]/g, '-');
 };
 
-const formatToFileName = (name, format) => `${name}.${format}`;
+export const formatToFileName = (name, format) => `${name}.${format}`;
 
-const getFilename = (filepath) => {
+export const getFilename = (filepath) => {
   const filepathUrl = new URL(filepath);
   return filepathUrl.pathname.split('/').filter(v => v !== '').join('-');
 };
 
-const getAllSrcFromHtml = (html) => {
+export const getAllSrcFromHtml = (html) => {
   const $ = cheerio.load(html);
   const tags = $('link, script, img');
   return Object.keys(tags).map((tagKey) => {
@@ -30,9 +29,17 @@ const getAllSrcFromHtml = (html) => {
   }).filter(el => el !== null);
 };
 
+export const isLocalLink = (link) => {
+  const checkUrl = new URL(link, 'http://dumb.ass');
+  return (checkUrl.origin === 'http://dumb.ass');
+};
+
+export const filterLocalLinks = linksArray => linksArray.filter(urlElem => isLocalLink(urlElem));
+
+
 /* eslint func-names: ["error", "never"] */
 
-const transformAllSrcInHtml = (html) => {
+export const transformAllSrcInHtml = (html) => {
   const $ = cheerio.load(html);
   $('script, img').each(function () {
     const oldSrc = $(this).attr('src');
@@ -50,12 +57,3 @@ const transformAllSrcInHtml = (html) => {
   });
   return $.html();
 };
-
-const filterLocalLinks = linksArray =>
-  linksArray.filter((urlElem) => {
-    const checkUrl = new URL(urlElem, 'http://dumb.ass');
-    return (checkUrl.origin === 'http://dumb.ass') ? checkUrl.pathname : false;
-  });
-
-
-export { formatUrl, formatToFileName, getAllSrcFromHtml, filterLocalLinks, getFilename, transformAllSrcInHtml };
