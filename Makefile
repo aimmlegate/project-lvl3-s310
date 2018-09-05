@@ -1,7 +1,7 @@
 install: install-deps
 
 run:
-	npx babel-node -- 'src/bin/index.js' --output /var/tmp/1 http://htmlbook.ru/
+	npx babel-node -- 'src/bin/index.js' --output
 
 install-deps:
 	npm install

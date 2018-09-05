@@ -1,4 +1,5 @@
 import url, { URL } from 'url';
+import path from 'path';
 import cheerio from 'cheerio';
 import _ from 'lodash';
 
@@ -8,10 +9,12 @@ export const formatUrl = (urlLink) => {
   return newName.replace(/[^A-Za-z0-9]/g, '-');
 };
 
+export const getDirname = urlLink => `${formatUrl(urlLink)}__files`;
+
 export const formatToFileName = (name, format) => `${name}.${format}`;
 
 export const getFilename = (filepath) => {
-  const filepathUrl = new URL(filepath);
+  const filepathUrl = new URL(filepath, 'http://dumb.ass');
   return filepathUrl.pathname.split('/').filter(v => v !== '').join('-');
 };
 
@@ -39,19 +42,19 @@ export const filterLocalLinks = linksArray => linksArray.filter(urlElem => isLoc
 
 /* eslint func-names: ["error", "never"] */
 
-export const transformAllSrcInHtml = (html) => {
+export const transformAllSrcInHtml = (html, local, dir) => {
   const $ = cheerio.load(html);
   $('script, img').each(function () {
     const oldSrc = $(this).attr('src');
-    if (oldSrc !== undefined) {
-      const newSrc = formatUrl(oldSrc);
+    if (oldSrc !== undefined && isLocalLink(oldSrc)) {
+      const newSrc = path.resolve(local, dir, getFilename(oldSrc));
       $(this).attr('src', newSrc);
     }
   });
   $('link').each(function () {
     const oldHref = $(this).attr('href');
-    if (oldHref !== undefined) {
-      const newHref = formatUrl(oldHref);
+    if (oldHref !== undefined && isLocalLink(oldHref)) {
+      const newHref = path.resolve(local, dir, getFilename(oldHref));
       $(this).attr('href', newHref);
     }
   });

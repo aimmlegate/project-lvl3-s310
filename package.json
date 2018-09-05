@@ -71,6 +71,7 @@
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.17.1",
     "html-minifier": "^3.5.20",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "mime": "^2.3.1"
   }
 }
