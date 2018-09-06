@@ -39,6 +39,8 @@ export const isLocalLink = (link) => {
 
 export const filterLocalLinks = linksArray => linksArray.filter(urlElem => isLocalLink(urlElem));
 
+export const transformLocalToAbsLinks = (baseurl, linksArray) =>
+  linksArray.map(src => new URL(src, baseurl).href);
 
 /* eslint func-names: ["error", "never"] */
 
@@ -60,3 +62,26 @@ export const transformAllSrcInHtml = (html, local, dir) => {
   });
   return $.html();
 };
+
+export const removeAllSrcInHtml = (html) => {
+  const $ = cheerio.load(html);
+  $('script, img').each(function () {
+    const oldSrc = $(this).attr('src');
+    if (oldSrc !== undefined) {
+      $(this).attr('src', '#');
+    }
+  });
+  $('link').each(function () {
+    const oldHref = $(this).attr('href');
+    if (oldHref !== undefined) {
+      $(this).attr('href', '#');
+    }
+  });
+  return $.html();
+};
+
+export const testpromise = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve();
+  }, 3000);
+});
