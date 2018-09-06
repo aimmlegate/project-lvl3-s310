@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import commander from 'commander';
 import { version } from '../../package.json';
-import saveAsFile from '../index';
+import saveAsFile from '../';
 
 commander
   .version(version, '-V, --version')
