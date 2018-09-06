@@ -44,37 +44,14 @@ export const transformLocalToAbsLinks = (baseurl, linksArray) =>
 
 /* eslint func-names: ["error", "never"] */
 
-export const transformAllSrcInHtml = (html, local, dir) => {
+export const transformAllSrcInHtml = (html, local, dir, erase = false) => {
   const $ = cheerio.load(html);
-  $('script, img').each(function () {
-    const oldSrc = $(this).attr('src');
+  $('script, img, link').each(function () {
+    const key = $(this).attr().src ? 'src' : 'href';
+    const oldSrc = $(this).attr(key);
     if (oldSrc !== undefined && isLocalLink(oldSrc)) {
       const newSrc = path.resolve(local, dir, getFilename(oldSrc));
-      $(this).attr('src', newSrc);
-    }
-  });
-  $('link').each(function () {
-    const oldHref = $(this).attr('href');
-    if (oldHref !== undefined && isLocalLink(oldHref)) {
-      const newHref = path.resolve(local, dir, getFilename(oldHref));
-      $(this).attr('href', newHref);
-    }
-  });
-  return $.html();
-};
-
-export const removeAllSrcInHtml = (html) => {
-  const $ = cheerio.load(html);
-  $('script, img').each(function () {
-    const oldSrc = $(this).attr('src');
-    if (oldSrc !== undefined) {
-      $(this).attr('src', '#');
-    }
-  });
-  $('link').each(function () {
-    const oldHref = $(this).attr('href');
-    if (oldHref !== undefined) {
-      $(this).attr('href', '#');
+      $(this).attr(key, erase ? '#' : newSrc);
     }
   });
   return $.html();

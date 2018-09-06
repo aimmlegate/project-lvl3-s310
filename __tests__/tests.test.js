@@ -4,7 +4,7 @@ import { promises as fsPromises } from 'fs';
 import path from 'path';
 import os from 'os';
 import nock from 'nock';
-import { getDirname, formatUrl, removeAllSrcInHtml } from '../src/utils';
+import { getDirname, formatUrl, transformAllSrcInHtml } from '../src/utils';
 import saveAsFile from '../src/';
 
 
@@ -38,5 +38,5 @@ test('test html save to file', async () => {
 
   expect(dirFiles).toEqual(['localhost-test.html', 'localhost-test__files']);
   expect(dirFilesAssets).toEqual(['cats.jpg', 'css.css']);
-  expect(removeAllSrcInHtml(html, '/test', '/test')).toBe(removeAllSrcInHtml(recivedHTML, '/test', '/test'));
+  expect(transformAllSrcInHtml(html, '/', '/', true)).toBe(transformAllSrcInHtml(recivedHTML, '/', '/', true));
 });
