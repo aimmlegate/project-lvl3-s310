@@ -27,7 +27,7 @@ export const getAllSrcFromHtml = (html) => {
   };
   Object.keys(mapping)
     .forEach(tag => $(tag).each((i, el) => arr.push($(el).attr(mapping[tag]))));
-  return arr;
+  return arr.filter(v => v !== undefined);
 };
 
 export const isLocalLink = (link) => {
