@@ -21,7 +21,6 @@ export const getAllSrcFromHtml = (html) => {
   const $ = cheerio.load(html);
   const tags = $('link, script, img');
   return Object.keys(tags).map((tagKey) => {
-    console.log(tags[tagKey].attribs);
     if (tags[tagKey].attribs) {
       return tags[tagKey].attribs.src || tags[tagKey].attribs.href || null;
     }
