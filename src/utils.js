@@ -20,12 +20,25 @@ export const getFilename = (filepath) => {
 export const getAllSrcFromHtml = (html) => {
   const $ = cheerio.load(html);
   const tags = $('link, script, img');
-  return Object.keys(tags).map((tagKey) => {
-    if (tags[tagKey].attribs) {
-      return tags[tagKey].attribs.src || tags[tagKey].attribs.href || null;
-    }
-    return null;
-  }).filter(src => src !== null);
+  const mapping = {
+    img: 'src',
+    script: 'src',
+    link: 'href',
+    null: null,
+  };
+
+  return Object.keys(tags)
+    .filter(key => Number.isInteger(parseInt(key, 10)))
+    .map((tagKey) => {
+      const tag = tags[tagKey].name;
+      const attr = tags[tagKey].attribs;
+      const neededAtr = mapping[tag];
+      if (attr) {
+        return attr[neededAtr];
+      }
+      return null;
+    })
+    .filter(src => src !== null);
 };
 
 export const isLocalLink = (link) => {
