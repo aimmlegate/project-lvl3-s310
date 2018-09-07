@@ -22,11 +22,10 @@ export const getAllSrcFromHtml = (html) => {
   const $ = cheerio.load(html);
   const tags = $('link, script, img');
   return Object.keys(tags).map((tagKey) => {
-    if (_.has(tags[tagKey].attribs, 'src')) {
-      return tags[tagKey].attribs.src;
-    }
-    if (_.has(tags[tagKey].attribs, 'href')) {
-      return tags[tagKey].attribs.href;
+    const attrib = Object.keys(tags[tagKey].attribs || {})
+      .filter(el => (el === 'src' || el === 'href'))[0];
+    if (attrib) {
+      return tags[tagKey].attribs[attrib];
     }
     return null;
   }).filter(el => el !== null);
