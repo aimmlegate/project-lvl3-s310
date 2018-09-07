@@ -80,10 +80,11 @@ const saveAsFile = (url, pathto = '/') => {
       logNet('send asset file request', src);
       return saveFile(src, pathFs);
     })))
-    .then(() => logGen('FINISH'))
+    .then(() => {
+      logGen('FINISH');
+    })
     .catch((e) => {
       console.error(errorFormat(e));
-      process.exit(1);
       return Promise.reject(e);
     });
 };
