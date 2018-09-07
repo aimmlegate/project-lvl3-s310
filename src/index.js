@@ -13,11 +13,11 @@ import {
   transformLocalToAbsLinks,
   getDirname,
 } from './utils';
+import errorFormat from './errors';
 
 const logGen = debug('page-loader:gen');
 const logNet = debug('page-loader:net');
 const logFs = debug('page-loader:fs');
-const logErr = debug('page-loader:Error');
 
 const saveFile = (url, pathto) => {
   const fileName = getFilename(url);
@@ -40,7 +40,7 @@ const saveFile = (url, pathto) => {
       const pathFs = path.join(pathto, fileName);
       return fsPromises.writeFile(pathFs, response.data);
     })
-    .catch(e => logErr(e));
+    .catch(e => console.error(errorFormat(e)));
 };
 
 const saveAsFile = (url, pathto = '/') => {
@@ -81,7 +81,11 @@ const saveAsFile = (url, pathto = '/') => {
       return saveFile(src, pathFs);
     })))
     .then(() => logGen('FINISH'))
-    .catch(e => logErr(e));
+    .catch((e) => {
+      console.error(errorFormat(e));
+      process.exit(1);
+      return Promise.reject(e);
+    });
 };
 
 export default saveAsFile;

@@ -25,7 +25,7 @@ export const getAllSrcFromHtml = (html) => {
       return tags[tagKey].attribs.src || tags[tagKey].attribs.href || null;
     }
     return null;
-  });
+  }).filter(src => src !== null);
 };
 
 export const isLocalLink = (link) => {
