@@ -18,7 +18,6 @@ const logGen = debug('page-loader:gen');
 const logNet = debug('page-loader:net');
 const logFs = debug('page-loader:fs');
 const logErr = debug('page-loader:Error');
-debug.log = console.info.bind(console);
 
 const saveFile = (url, pathto) => {
   const fileName = getFilename(url);
