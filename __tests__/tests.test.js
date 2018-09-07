@@ -57,7 +57,7 @@ test('test html save to file', async () => {
 
   expect(dirFiles).toEqual(['localhost-test.html', 'localhost-test__files']);
   expect(dirFilesAssets).toEqual(['cats.jpg', 'css.css']);
-  expect(transformAllSrcInHtml(html, '/', '/', true)).toBe(transformAllSrcInHtml(recivedHTML, '/', '/', true));
+  expect(transformAllSrcInHtml(html, '/', '/', '#')).toBe(transformAllSrcInHtml(recivedHTML, '/', '/', '#'));
 });
 
 test('test html save to file, assets err', async () => {

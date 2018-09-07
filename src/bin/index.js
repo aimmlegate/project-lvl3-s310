@@ -9,11 +9,7 @@ commander
   .usage('[options] <Directory> <URL>')
   .option('-o, --output [path]', 'output path')
   .action((url) => {
-    try {
-      saveAsFile(url, commander.output);
-      process.exit(0);
-    } catch (e) {
-      process.exit(1);
-    }
+    saveAsFile(url, commander.output)
+      .catch(() => process.exit(1));
   })
   .parse(process.argv);

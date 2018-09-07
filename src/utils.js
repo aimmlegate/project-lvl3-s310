@@ -19,26 +19,15 @@ export const getFilename = (filepath) => {
 
 export const getAllSrcFromHtml = (html) => {
   const $ = cheerio.load(html);
-  const tags = $('link, script, img');
+  const arr = [];
   const mapping = {
     img: 'src',
     script: 'src',
     link: 'href',
-    null: null,
   };
-
-  return Object.keys(tags)
-    .filter(key => Number.isInteger(parseInt(key, 10)))
-    .map((tagKey) => {
-      const tag = tags[tagKey].name;
-      const attr = tags[tagKey].attribs;
-      const neededAtr = mapping[tag];
-      if (attr) {
-        return attr[neededAtr];
-      }
-      return null;
-    })
-    .filter(src => src !== null);
+  Object.keys(mapping)
+    .forEach(tag => $(tag).each((i, el) => arr.push($(el).attr(mapping[tag]))));
+  return arr;
 };
 
 export const isLocalLink = (link) => {
@@ -51,18 +40,21 @@ export const filterLocalLinks = linksArray => linksArray.filter(urlElem => isLoc
 export const transformLocalToAbsLinks = (baseurl, linksArray) =>
   linksArray.map(src => new URL(src, baseurl).href);
 
-/* eslint func-names: ["error", "never"] */
-
-export const transformAllSrcInHtml = (html, local, dir, erase = false) => {
+export const transformAllSrcInHtml = (html, local, dir, erase) => {
   const $ = cheerio.load(html);
-  $('script, img, link').each(function () {
-    const key = $(this).attr().src ? 'src' : 'href';
-    const oldSrc = $(this).attr(key);
-    if (oldSrc !== undefined && isLocalLink(oldSrc)) {
-      const newSrc = path.resolve(local, dir, getFilename(oldSrc));
-      $(this).attr(key, erase ? '#' : newSrc);
-    }
-  });
+  const mapping = {
+    img: 'src',
+    script: 'src',
+    link: 'href',
+  };
+  Object.keys(mapping)
+    .forEach(tag => $(tag).each((i, el) => {
+      const oldSrc = $(el).attr(mapping[tag]);
+      if (isLocalLink(oldSrc)) {
+        const newSrc = path.resolve(local, dir, getFilename(oldSrc));
+        $(el).attr(mapping[tag], erase || newSrc);
+      }
+    }));
   return $.html();
 };
 
