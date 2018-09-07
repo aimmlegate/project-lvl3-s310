@@ -58,11 +58,13 @@ const saveAsFile = (url, pathto = '/') => {
       srcs = getAllSrcFromHtml(html)
         |> filterLocalLinks
         |> (_ => transformLocalToAbsLinks(url, _));
+
       logGen('assets dirname - ', dirname);
       logGen('assets srcs array - ', srcs);
       const transformedHtml = transformAllSrcInHtml(html, pathto, dirname);
       const fileName = formatUrl(url)
         |> (_ => formatToFileName(_, 'html'));
+
       return [transformedHtml, fileName];
     })
     .then(([transformedHtml, fileName]) => {

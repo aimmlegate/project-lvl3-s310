@@ -12,4 +12,3 @@ commander
     saveAsFile(url, commander.output);
   })
   .parse(process.argv);
-

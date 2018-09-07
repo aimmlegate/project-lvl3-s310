@@ -21,13 +21,12 @@ export const getAllSrcFromHtml = (html) => {
   const $ = cheerio.load(html);
   const tags = $('link, script, img');
   return Object.keys(tags).map((tagKey) => {
-    const attrib = Object.keys(tags[tagKey].attribs || {})
-      .filter(el => (el === 'src' || el === 'href'))[0];
-    if (attrib) {
-      return tags[tagKey].attribs[attrib];
+    console.log(tags[tagKey].attribs);
+    if (tags[tagKey].attribs) {
+      return tags[tagKey].attribs.src || tags[tagKey].attribs.href || null;
     }
     return null;
-  }).filter(el => el !== null);
+  });
 };
 
 export const isLocalLink = (link) => {
