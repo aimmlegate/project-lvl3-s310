@@ -1,7 +1,6 @@
 import url, { URL } from 'url';
 import path from 'path';
 import cheerio from 'cheerio';
-import _ from 'lodash';
 
 export const formatUrl = (urlLink) => {
   const link = url.parse(urlLink);
