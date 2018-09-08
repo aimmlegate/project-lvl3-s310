@@ -5,7 +5,7 @@ import path from 'path';
 import os from 'os';
 import nock from 'nock';
 import { getDirname, formatUrl, transformAllSrcInHtml } from '../src/utils';
-import saveAsFile from '../src/';
+import savePage from '../src/';
 
 
 const testurl = 'http://localhost/test';
@@ -49,7 +49,7 @@ test('test html save to file', async () => {
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
   const pathToRecivedAssets = path.resolve(patchToRecived, getDirname(testurl));
 
-  await saveAsFile(testurl, patchToRecived);
+  await savePage(testurl, patchToRecived);
 
   const dirFiles = await fsPromises.readdir(patchToRecived, 'utf8');
   const dirFilesAssets = await fsPromises.readdir(pathToRecivedAssets, 'utf8');
@@ -64,7 +64,7 @@ test('test html save to file, assets err', async () => {
   const html = await fsPromises.readFile('__tests__/__fixtures__/localhost-test-errors.html', 'utf-8');
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
 
-  await saveAsFile(testurlEr, patchToRecived);
+  await savePage(testurlEr, patchToRecived);
 
   const dirFiles = await fsPromises.readdir(patchToRecived, 'utf8');
   const recivedHTML = await fsPromises.readFile(`${patchToRecived}/${formatUrl(testurlEr)}.html`, 'utf-8');
@@ -76,7 +76,7 @@ test('test html save to file, assets err', async () => {
 test('throw error url dont exist', async () => {
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
   try {
-    await saveAsFile('http://dumb.ass', patchToRecived);
+    await savePage('http://dumb.ass', patchToRecived);
   } catch (e) {
     expect(e.code).toBe('ENOTFOUND');
   }
@@ -84,7 +84,7 @@ test('throw error url dont exist', async () => {
 
 test('throw error directory dont exist', async () => {
   try {
-    await saveAsFile('https://ru.hexlet.io', '/ssssss');
+    await savePage('https://ru.hexlet.io', '/ssssss');
   } catch (e) {
     expect(e.code).toBe('ENOENT');
   }
@@ -92,27 +92,27 @@ test('throw error directory dont exist', async () => {
 
 test('net errors', async () => {
   try {
-    await saveAsFile('http://localhost/403', '/');
+    await savePage('http://localhost/403', '/');
   } catch (e) {
     expect(e.response.status).toBe(403);
   }
   try {
-    await saveAsFile('http://localhost/404', '/');
+    await savePage('http://localhost/404', '/');
   } catch (e) {
     expect(e.response.status).toBe(404);
   }
   try {
-    await saveAsFile('http://localhost/429', '/');
+    await savePage('http://localhost/429', '/');
   } catch (e) {
     expect(e.response.status).toBe(429);
   }
   try {
-    await saveAsFile('http://localhost/500', '/');
+    await savePage('http://localhost/500', '/');
   } catch (e) {
     expect(e.response.status).toBe(500);
   }
   try {
-    await saveAsFile('http://localhost/503', '/');
+    await savePage('http://localhost/503', '/');
   } catch (e) {
     expect(e.response.status).toBe(503);
   }

@@ -26,7 +26,7 @@ export const getAllSrcFromHtml = (html) => {
     link: 'href',
   };
   Object.keys(mapping)
-    .forEach(tag => $(tag).each((i, el) => arr.push($(el).attr(mapping[tag]))));
+    .map(tag => $(tag).each((i, el) => arr.push($(el).attr(mapping[tag]))));
   return arr.filter(v => v !== undefined);
 };
 

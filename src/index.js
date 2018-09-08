@@ -43,7 +43,7 @@ const saveFile = (url, pathto) => {
     .catch(e => console.error(errorFormat(e)));
 };
 
-const saveAsFile = (url, pathto = '/') => {
+const savePage = (url, pathto = '/') => {
   let dirname;
   let srcs;
   logNet('send HTML request', url);
@@ -89,5 +89,5 @@ const saveAsFile = (url, pathto = '/') => {
     });
 };
 
-export default saveAsFile;
+export default savePage;
 
