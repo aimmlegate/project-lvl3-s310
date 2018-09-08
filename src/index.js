@@ -40,7 +40,10 @@ const saveFile = (url, pathto) => {
       const pathFs = path.join(pathto, fileName);
       return fsPromises.writeFile(pathFs, response.data);
     })
-    .catch(e => console.error(errorFormat(e)));
+    .catch((e) => {
+      console.error(errorFormat(e));
+      //return Promise.reject(e);
+    });
 };
 
 const savePage = (url, pathto = '/') => {
