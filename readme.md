@@ -4,4 +4,4 @@
 
 [![Build Status](https://travis-ci.org/aimmlegate/project-lvl3-s310.svg?branch=master)](https://travis-ci.org/aimmlegate/project-lvl3-s310)
 
-https://asciinema.org/a/pmdQF4m8uuZq8qUON3nykeaL1
+https://asciinema.org/a/euUCLgA5zRduNHhVD3haCmKzp

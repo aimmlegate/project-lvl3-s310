@@ -3,6 +3,7 @@ import { promises as fsPromises } from 'fs';
 import path from 'path';
 import mime from 'mime';
 import debug from 'debug';
+import Listr from 'listr';
 import {
   formatUrl,
   formatToFileName,
@@ -22,6 +23,7 @@ const logFs = debug('page-loader:fs');
 const saveFile = (url, pathto) => {
   const fileName = getFilename(url);
   const extName = path.extname(fileName);
+  logNet('send asset file request', url);
   return axios
     .request({
       responseType: 'arraybuffer',
@@ -42,8 +44,18 @@ const saveFile = (url, pathto) => {
     })
     .catch((e) => {
       console.error(errorFormat(e));
-      //return Promise.reject(e);
     });
+};
+
+const assetDwnlTask = (srcs, pathFs) => {
+  const tasks = new Listr(srcs.map((src) => {
+    const t = {
+      title: src,
+      task: () => saveFile(src, pathFs),
+    };
+    return t;
+  }), { concurrent: true });
+  return tasks;
 };
 
 const savePage = (url, pathto = '/') => {
@@ -78,11 +90,11 @@ const savePage = (url, pathto = '/') => {
       logFs('create assets dir', dirname);
       return fsPromises.mkdir(path.resolve(pathto, dirname));
     })
-    .then(() => Promise.all(srcs.map((src) => {
+    .then(() => {
       const pathFs = path.resolve(pathto, dirname);
-      logNet('send asset file request', src);
-      return saveFile(src, pathFs);
-    })))
+      return assetDwnlTask(srcs, pathFs);
+    })
+    .then(tasks => tasks.run())
     .then(() => {
       logGen('FINISH');
     })

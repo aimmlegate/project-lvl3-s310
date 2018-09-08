@@ -1,7 +1,7 @@
 install: install-deps
 
 run:
-	npx babel-node -- 'src/bin/index.js' --output /tmp/1 https://ru.hexlet.io/projects
+	npx babel-node -- 'src/bin/index.js' --output /tmp/1 https://ru.hexlet.io/
 
 start-debug:
 	DEBUG=page-loader:* page-loader --output /tmp/1 https://ru.hexlet.io/
