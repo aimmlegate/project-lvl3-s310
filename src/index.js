@@ -60,8 +60,8 @@ const assetDwnlTask = (srcs, pathFs) => {
 };
 
 const savePage = (url, pathto = '/') => {
-  let dirname;
-  let srcs;
+  let assetsDirname;
+  let assetsSrcs;
   logNet('send HTML request', url);
   return axios
     .get(url)
@@ -70,14 +70,14 @@ const savePage = (url, pathto = '/') => {
       return response.data;
     })
     .then((html) => {
-      dirname = getDirname(url);
-      srcs = getAllSrcFromHtml(html)
+      assetsDirname = getDirname(url);
+      assetsSrcs = getAllSrcFromHtml(html)
         |> filterLocalLinks
         |> (_ => transformLocalToAbsLinks(url, _));
 
-      logGen('assets dirname - ', dirname);
-      logGen('assets srcs array - ', srcs);
-      const transformedHtml = transformAllSrcInHtml(html, pathto, dirname);
+      logGen('assets dirname - ', assetsDirname);
+      logGen('assets srcs array - ', assetsSrcs);
+      const transformedHtml = transformAllSrcInHtml(html, pathto, assetsDirname);
       const fileName = formatUrl(url)
         |> (_ => formatToFileName(_, 'html'));
 
@@ -88,12 +88,12 @@ const savePage = (url, pathto = '/') => {
       return fsPromises.writeFile(path.join(pathto, fileName), transformedHtml);
     })
     .then(() => {
-      logFs('create assets dir', dirname);
-      return fsPromises.mkdir(path.resolve(pathto, dirname));
+      logFs('create assets dir', assetsDirname);
+      return fsPromises.mkdir(path.resolve(pathto, assetsDirname));
     })
     .then(() => {
-      const pathFs = path.resolve(pathto, dirname);
-      return assetDwnlTask(srcs, pathFs);
+      const pathFs = path.resolve(pathto, assetsDirname);
+      return assetDwnlTask(assetsSrcs, pathFs);
     })
     .then(tasks => tasks.run())
     .then(() => {
