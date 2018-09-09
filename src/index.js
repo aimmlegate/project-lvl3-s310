@@ -44,7 +44,7 @@ const saveFile = (url, pathto) => {
     })
     .catch((e) => {
       console.error(errorFormat(e));
-      throw e;
+      return Promise.reject(e);
     });
 };
 

@@ -43,7 +43,7 @@ beforeAll(async () => {
     .get('/brbrbr')
     .reply(500);
 });
-/*
+
 test('test html save to file', async () => {
   const html = await fsPromises.readFile('__tests__/__fixtures__/localhost-test.html', 'utf-8');
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
@@ -59,17 +59,17 @@ test('test html save to file', async () => {
   expect(dirFilesAssets).toEqual(['cats.jpg', 'css.css']);
   expect(transformAllSrcInHtml(html, '/', '/', '#')).toBe(transformAllSrcInHtml(recivedHTML, '/', '/', '#'));
 });
-*/
 
 test('test html save to file, assets err', async () => {
   const html = await fsPromises.readFile('__tests__/__fixtures__/localhost-test-errors.html', 'utf-8');
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
-
-  await savePage(testurlEr, patchToRecived);
-
+  try {
+    await savePage(testurlEr, patchToRecived);
+  } catch (e) {
+    expect(e.response.status).toBe(500);
+  }
   const dirFiles = await fsPromises.readdir(patchToRecived, 'utf8');
   const recivedHTML = await fsPromises.readFile(`${patchToRecived}/${formatUrl(testurlEr)}.html`, 'utf-8');
-
   expect(dirFiles).toEqual(['localhost-test-err.html', 'localhost-test-err__files']);
   expect(transformAllSrcInHtml(html, '/', '/', true)).toBe(transformAllSrcInHtml(recivedHTML, '/', '/', true));
 });
