@@ -43,7 +43,7 @@ beforeAll(async () => {
     .get('/brbrbr')
     .reply(500);
 });
-
+/*
 test('test html save to file', async () => {
   const html = await fsPromises.readFile('__tests__/__fixtures__/localhost-test.html', 'utf-8');
   const patchToRecived = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'page-'));
@@ -59,6 +59,7 @@ test('test html save to file', async () => {
   expect(dirFilesAssets).toEqual(['cats.jpg', 'css.css']);
   expect(transformAllSrcInHtml(html, '/', '/', '#')).toBe(transformAllSrcInHtml(recivedHTML, '/', '/', '#'));
 });
+*/
 
 test('test html save to file, assets err', async () => {
   const html = await fsPromises.readFile('__tests__/__fixtures__/localhost-test-errors.html', 'utf-8');

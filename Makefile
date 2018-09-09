@@ -1,10 +1,10 @@
 install: install-deps
 
 run:
-	npx babel-node -- 'src/bin/index.js' --output /tmp/1 https://ru.hexlet.io/
+	npx babel-node -- 'src/bin/index.js' --output /tmp/1 https://asciinema.org/
 
 start-debug:
-	DEBUG=page-loader:* page-loader --output /tmp/1 https://ru.hexlet.io/
+	DEBUG=page-loader:* page-loader --output /tmp/1 https://asciinema.org/
 
 install-deps:
 	npm install
